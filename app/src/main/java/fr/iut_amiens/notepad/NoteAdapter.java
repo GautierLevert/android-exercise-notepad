@@ -11,7 +11,7 @@ import java.util.List;
 
 public class NoteAdapter extends BaseAdapter {
 
-    private List<String> notes = new ArrayList<>();
+    private List<Note> notes = new ArrayList<>();
 
     private LayoutInflater layoutInflater;
 
@@ -19,7 +19,7 @@ public class NoteAdapter extends BaseAdapter {
         this.layoutInflater = layoutInflater;
     }
 
-    public void add(String title) {
+    public void add(Note title) {
         notes.add(title);
         notifyDataSetChanged();
     }
@@ -35,13 +35,13 @@ public class NoteAdapter extends BaseAdapter {
     }
 
     @Override
-    public String getItem(int position) {
+    public Note getItem(int position) {
         return notes.get(position);
     }
 
     @Override
     public long getItemId(int position) {
-        return position;
+        return getItem(position).getId();
     }
 
     @Override
@@ -53,7 +53,7 @@ public class NoteAdapter extends BaseAdapter {
             v = convertView;
         }
         TextView textView = (TextView) v.findViewById(R.id.textView);
-        textView.setText(getItem(position));
+        textView.setText(getItem(position).getTitle());
         return v;
     }
 }

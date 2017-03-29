@@ -4,8 +4,9 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
+import android.database.Cursor;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -13,13 +14,11 @@ import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ListView;
 
-import java.util.Map;
-
 public class MainActivity extends Activity implements AdapterView.OnItemClickListener {
 
-    public static final String SHARED_PREF_NAME = "fr.iut-amiens.notepad.SHARED_PREF";
-
     private NoteAdapter adapter;
+
+    private DatabaseOpenHelper dao;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,6 +30,8 @@ public class MainActivity extends Activity implements AdapterView.OnItemClickLis
         ListView listView = (ListView) findViewById(R.id.listView);
         listView.setAdapter(adapter);
         listView.setOnItemClickListener(this);
+
+        dao = new DatabaseOpenHelper(this);
     }
 
     @Override
@@ -69,27 +70,24 @@ public class MainActivity extends Activity implements AdapterView.OnItemClickLis
     }
 
     private void newNote(String title) {
-        SharedPreferences sp = getSharedPreferences(SHARED_PREF_NAME, MODE_PRIVATE);
-        SharedPreferences.Editor editor = sp.edit();
-        editor.putString(title, "");
-        editor.apply();
+        Log.d("NOTE", "create note with title: " + title);
+        dao.getWritableDatabase().execSQL("INSERT INTO note (title, content) VALUES (?, \"\")", new String[]{title});
         refreshList();
     }
 
     private void refreshList() {
         adapter.clear();
-        SharedPreferences sp = getSharedPreferences(SHARED_PREF_NAME, MODE_PRIVATE);
-        Map<String, ?> notes = sp.getAll();
-        for (String title : notes.keySet()) {
-            adapter.add(title);
+        Cursor cursor = dao.getReadableDatabase().query("note", new String[]{"_id", "title", "content"}, null, null, null, null, null);
+        while (cursor.moveToNext()) {
+            adapter.add(new Note(cursor.getLong(cursor.getColumnIndex("_id")), cursor.getString(cursor.getColumnIndex("title")), cursor.getString(cursor.getColumnIndex("content"))));
         }
     }
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        String title = adapter.getItem(position);
+        Log.d("NOTE", "click on list: " + id);
         Intent intent = new Intent(this, EditActivity.class);
-        intent.putExtra(EditActivity.EXTRA_NOTE_TITLE, title);
+        intent.putExtra(EditActivity.EXTRA_NOTE_TITLE, id);
         startActivity(intent);
     }
 }
