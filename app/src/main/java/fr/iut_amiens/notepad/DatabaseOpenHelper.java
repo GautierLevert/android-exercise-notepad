@@ -2,12 +2,19 @@ package fr.iut_amiens.notepad;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
-/**
- * Created by gautier on 04/02/15.
- */
-public class DatabaseOpenHelper extends SQLiteOpenHelper {
+import com.j256.ormlite.android.apptools.OrmLiteSqliteOpenHelper;
+import com.j256.ormlite.dao.Dao;
+import com.j256.ormlite.dao.DaoManager;
+import com.j256.ormlite.support.ConnectionSource;
+import com.j256.ormlite.table.TableUtils;
+
+import java.sql.SQLException;
+
+public class DatabaseOpenHelper extends OrmLiteSqliteOpenHelper {
+
+    private static final String LOG_TAG = DatabaseOpenHelper.class.getSimpleName();
 
     private static final String DATABASE = "database";
 
@@ -18,12 +25,20 @@ public class DatabaseOpenHelper extends SQLiteOpenHelper {
     }
 
     @Override
-    public void onCreate(SQLiteDatabase db) {
-        db.execSQL("CREATE TABLE IF NOT EXISTS note (_id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT, content TEXT)");
+    public void onCreate(SQLiteDatabase database, ConnectionSource connectionSource) {
+        try {
+            TableUtils.createTable(connectionSource, Note.class);
+        } catch (SQLException e) {
+            Log.e(LOG_TAG, "", e);
+        }
     }
 
     @Override
-    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+    public void onUpgrade(SQLiteDatabase database, ConnectionSource connectionSource, int oldVersion, int newVersion) {
 
+    }
+
+    public Dao<Note, Long> getNoteDao() throws SQLException {
+        return DaoManager.createDao(getConnectionSource(), Note.class);
     }
 }

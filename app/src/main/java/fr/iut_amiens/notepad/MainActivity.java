@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.database.Cursor;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -14,11 +13,18 @@ import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ListView;
 
+import com.j256.ormlite.android.apptools.OpenHelperManager;
+import com.j256.ormlite.dao.Dao;
+
+import java.sql.SQLException;
+
 public class MainActivity extends Activity implements AdapterView.OnItemClickListener {
+
+    private static final String LOG_TAG = MainActivity.class.getSimpleName();
 
     private NoteAdapter adapter;
 
-    private DatabaseOpenHelper dao;
+    private Dao<Note, Long> dao;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,7 +37,17 @@ public class MainActivity extends Activity implements AdapterView.OnItemClickLis
         listView.setAdapter(adapter);
         listView.setOnItemClickListener(this);
 
-        dao = new DatabaseOpenHelper(this);
+        try {
+            dao = OpenHelperManager.getHelper(this, DatabaseOpenHelper.class).getNoteDao();
+        } catch (SQLException e) {
+            Log.e(LOG_TAG, "", e);
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        OpenHelperManager.releaseHelper();
     }
 
     @Override
@@ -70,16 +86,25 @@ public class MainActivity extends Activity implements AdapterView.OnItemClickLis
     }
 
     private void newNote(String title) {
-        Log.d("NOTE", "create note with title: " + title);
-        dao.getWritableDatabase().execSQL("INSERT INTO note (title, content) VALUES (?, \"\")", new String[]{title});
+        if (dao != null) {
+            try {
+                Log.d("NOTE", "create note with title: " + title);
+                dao.create(new Note(0, title, ""));
+            } catch (SQLException e) {
+                Log.e(LOG_TAG, "", e);
+            }
+        }
         refreshList();
     }
 
     private void refreshList() {
         adapter.clear();
-        Cursor cursor = dao.getReadableDatabase().query("note", new String[]{"_id", "title", "content"}, null, null, null, null, null);
-        while (cursor.moveToNext()) {
-            adapter.add(new Note(cursor.getLong(cursor.getColumnIndex("_id")), cursor.getString(cursor.getColumnIndex("title")), cursor.getString(cursor.getColumnIndex("content"))));
+        if (dao != null) {
+            try {
+                adapter.addAll(dao.queryForAll());
+            } catch (SQLException e) {
+                Log.e(LOG_TAG, "", e);
+            }
         }
     }
 

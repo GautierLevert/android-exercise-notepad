@@ -24,6 +24,11 @@ public class NoteAdapter extends BaseAdapter {
         notifyDataSetChanged();
     }
 
+    public void addAll(List<Note> notes) {
+        this.notes.addAll(notes);
+        notifyDataSetChanged();
+    }
+
     public void clear() {
         notes.clear();
         notifyDataSetChanged();

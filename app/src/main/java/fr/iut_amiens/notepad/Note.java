@@ -1,12 +1,22 @@
 package fr.iut_amiens.notepad;
 
+import com.j256.ormlite.field.DatabaseField;
+import com.j256.ormlite.table.DatabaseTable;
+
+@DatabaseTable(tableName = "note")
 public class Note {
 
+    @DatabaseField(columnName = "_id", generatedId = true)
     private long id;
 
+    @DatabaseField
     private String title;
 
+    @DatabaseField
     private String content;
+
+    public Note() {
+    }
 
     public Note(long id, String title, String content) {
         this.id = id;
@@ -22,8 +32,16 @@ public class Note {
         return title;
     }
 
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
     public String getContent() {
         return content;
+    }
+
+    public void setContent(String content) {
+        this.content = content;
     }
 
     @Override
