@@ -18,7 +18,7 @@ public class EditActivity extends Activity {
         setContentView(R.layout.activity_edit);
 
         noteTitle = getIntent().getStringExtra(EXTRA_NOTE_TITLE);
-        editText = (EditText) findViewById(R.id.editText);
+        editText = findViewById(R.id.editText);
 
         setTitle(noteTitle);
     }
