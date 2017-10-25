@@ -10,7 +10,7 @@ import fr.iut_amiens.notepad.data.DatabaseOpenHelper;
 
 public class EditActivity extends Activity {
 
-    public static final String EXTRA_NOTE_TITLE = "fr.iut_amiens.notepad.EXTRA_NOTE_TITLE";
+    public static final String EXTRA_NOTE_ID = "fr.iut_amiens.notepad.EXTRA_NOTE_ID";
 
     private long noteId;
 
@@ -23,8 +23,8 @@ public class EditActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit);
 
-        noteId = getIntent().getLongExtra(EXTRA_NOTE_TITLE, -1);
-        editText = (EditText) findViewById(R.id.editText);
+        noteId = getIntent().getLongExtra(EXTRA_NOTE_ID, -1);
+        editText = findViewById(R.id.editText);
 
         dao = new DatabaseOpenHelper(this);
 

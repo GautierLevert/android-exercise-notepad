@@ -6,13 +6,15 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.support.v7.widget.DividerItemDecoration;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.EditText;
-import android.widget.ListView;
 
 import fr.iut_amiens.notepad.data.DatabaseOpenHelper;
 import fr.iut_amiens.notepad.data.model.Note;
@@ -30,9 +32,10 @@ public class MainActivity extends Activity implements AdapterView.OnItemClickLis
 
         adapter = new NoteAdapter(getLayoutInflater());
 
-        ListView listView = findViewById(R.id.listView);
-        listView.setAdapter(adapter);
-        listView.setOnItemClickListener(this);
+        RecyclerView recyclerView = findViewById(R.id.listView);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
+        recyclerView.setAdapter(adapter);
+        recyclerView.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
 
         dao = new DatabaseOpenHelper(this);
     }
@@ -55,14 +58,12 @@ public class MainActivity extends Activity implements AdapterView.OnItemClickLis
         if (item.getItemId() == R.id.action_add) {
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setTitle("Add a note");
-            final EditText editText = new EditText(this);
-            editText.setHint(R.string.note_title);
-            editText.setSingleLine();
-            builder.setView(editText);
+            builder.setView(getLayoutInflater().inflate(R.layout.dialog_add_note, null, false));
             builder.setNegativeButton(android.R.string.cancel, null);
             builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
+                    EditText editText = ((AlertDialog) dialog).findViewById(R.id.editText);
                     newNote(editText.getText().toString());
                 }
             });
@@ -91,7 +92,7 @@ public class MainActivity extends Activity implements AdapterView.OnItemClickLis
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         Log.d("NOTE", "click on list: " + id);
         Intent intent = new Intent(this, EditActivity.class);
-        intent.putExtra(EditActivity.EXTRA_NOTE_TITLE, id);
+        intent.putExtra(EditActivity.EXTRA_NOTE_ID, id);
         startActivity(intent);
     }
 }
