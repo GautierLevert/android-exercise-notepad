@@ -14,6 +14,9 @@ import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ListView;
 
+import fr.iut_amiens.notepad.data.DatabaseOpenHelper;
+import fr.iut_amiens.notepad.data.model.Note;
+
 public class MainActivity extends Activity implements AdapterView.OnItemClickListener {
 
     private NoteAdapter adapter;
@@ -27,7 +30,7 @@ public class MainActivity extends Activity implements AdapterView.OnItemClickLis
 
         adapter = new NoteAdapter(getLayoutInflater());
 
-        ListView listView = (ListView) findViewById(R.id.listView);
+        ListView listView = findViewById(R.id.listView);
         listView.setAdapter(adapter);
         listView.setOnItemClickListener(this);
 
@@ -81,6 +84,7 @@ public class MainActivity extends Activity implements AdapterView.OnItemClickLis
         while (cursor.moveToNext()) {
             adapter.add(new Note(cursor.getLong(cursor.getColumnIndex("_id")), cursor.getString(cursor.getColumnIndex("title")), cursor.getString(cursor.getColumnIndex("content"))));
         }
+        cursor.close();
     }
 
     @Override

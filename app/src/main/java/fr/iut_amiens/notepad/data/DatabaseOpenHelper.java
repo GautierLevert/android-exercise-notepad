@@ -1,4 +1,4 @@
-package fr.iut_amiens.notepad;
+package fr.iut_amiens.notepad.data;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;

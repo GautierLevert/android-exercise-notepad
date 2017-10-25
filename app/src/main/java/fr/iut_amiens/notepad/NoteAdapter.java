@@ -9,6 +9,8 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.List;
 
+import fr.iut_amiens.notepad.data.model.Note;
+
 public class NoteAdapter extends BaseAdapter {
 
     private List<Note> notes = new ArrayList<>();

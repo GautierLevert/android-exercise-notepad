@@ -6,6 +6,8 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.EditText;
 
+import fr.iut_amiens.notepad.data.DatabaseOpenHelper;
+
 public class EditActivity extends Activity {
 
     public static final String EXTRA_NOTE_TITLE = "fr.iut_amiens.notepad.EXTRA_NOTE_TITLE";

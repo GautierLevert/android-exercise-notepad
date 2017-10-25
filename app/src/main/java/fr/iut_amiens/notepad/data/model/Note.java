@@ -1,4 +1,4 @@
-package fr.iut_amiens.notepad;
+package fr.iut_amiens.notepad.data.model;
 
 public class Note {
 
