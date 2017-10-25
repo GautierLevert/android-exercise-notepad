@@ -10,11 +10,14 @@ import com.j256.ormlite.dao.Dao;
 
 import java.sql.SQLException;
 
+import fr.iut_amiens.notepad.data.DatabaseOpenHelper;
+import fr.iut_amiens.notepad.data.model.Note;
+
 public class EditActivity extends Activity {
 
     private static final String LOG_TAG = EditActivity.class.getSimpleName();
 
-    public static final String EXTRA_NOTE_TITLE = "fr.iut_amiens.notepad.EXTRA_NOTE_TITLE";
+    public static final String EXTRA_NOTE_ID = "fr.iut_amiens.notepad.EXTRA_NOTE_ID";
 
     private Note note;
 
@@ -27,11 +30,11 @@ public class EditActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit);
 
-        editText = (EditText) findViewById(R.id.editText);
+        editText = findViewById(R.id.editText);
 
         try {
             dao = OpenHelperManager.getHelper(this, DatabaseOpenHelper.class).getNoteDao();
-            note = dao.queryForId(getIntent().getLongExtra(EXTRA_NOTE_TITLE, -1));
+            note = dao.queryForId(getIntent().getLongExtra(EXTRA_NOTE_ID, -1));
 
             if (note != null) {
                 Log.d("NOTE", "read content: \"" + note);

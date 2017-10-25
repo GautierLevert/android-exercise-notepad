@@ -1,4 +1,4 @@
-package fr.iut_amiens.notepad;
+package fr.iut_amiens.notepad.data.model;
 
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;

@@ -1,4 +1,4 @@
-package fr.iut_amiens.notepad;
+package fr.iut_amiens.notepad.data;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
@@ -11,6 +11,8 @@ import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.table.TableUtils;
 
 import java.sql.SQLException;
+
+import fr.iut_amiens.notepad.data.model.Note;
 
 public class DatabaseOpenHelper extends OrmLiteSqliteOpenHelper {
 
