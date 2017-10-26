@@ -19,7 +19,7 @@ import android.widget.EditText;
 import fr.iut_amiens.notepad.data.DatabaseOpenHelper;
 import fr.iut_amiens.notepad.data.model.Note;
 
-public class MainActivity extends Activity implements AdapterView.OnItemClickListener {
+public class MainActivity extends Activity {
 
     private NoteAdapter adapter;
 
@@ -86,13 +86,5 @@ public class MainActivity extends Activity implements AdapterView.OnItemClickLis
             adapter.add(new Note(cursor.getLong(cursor.getColumnIndex("_id")), cursor.getString(cursor.getColumnIndex("title")), cursor.getString(cursor.getColumnIndex("content"))));
         }
         cursor.close();
-    }
-
-    @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        Log.d("NOTE", "click on list: " + id);
-        Intent intent = new Intent(this, EditActivity.class);
-        intent.putExtra(EditActivity.EXTRA_NOTE_ID, id);
-        startActivity(intent);
     }
 }
